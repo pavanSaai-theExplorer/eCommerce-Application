@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: notification-service
+
+  # Mail Properties (Verify Mailtrap credentials)
+  mail:
+    host: sandbox.smtp.mailtrap.io
+    port: 2525
+    username: e7477af2dbb02c
+    password: eb4c1a8ceb0af4
+
+  # Kafka Consumer Properties
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: notification-service  # Ensure it's unique for this service
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      enable-auto-commit: true  # Automatically commit consumer offsets
+      properties:
+        schema.registry.url: http://127.0.0.1:8085  # Schema Registry URL
+        specific.avro.reader: true
+        max.poll.interval.ms: 300000  # Max interval between poll calls
+        session.timeout.ms: 10000     # Timeout for broker connections
+
+server:
+  port: 8083
+
+logging:
+  level:
+    root: INFO
+    org.apache.kafka: WARN  # Set Kafka logs to WARN to reduce verbosity
+    org.springframework: INFO
